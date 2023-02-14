@@ -2,7 +2,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const proposals = new Schema(
+const works = new Schema(
   {
     clientId :{
         type: Schema.Types.ObjectId,
@@ -13,13 +13,17 @@ const proposals = new Schema(
         ref: 'jobpost',
     },
     proposals :{
-        type:String,
+        type: Schema.Types.ObjectId,
+        ref: 'proposal',
     },
     amount:{
-        type:String,
+        type:Number,
     },
     rated:{
         type:Number,
+    },
+    feedback:{
+        type: String,
     },
     action:{
         type: String,
@@ -28,11 +32,10 @@ const proposals = new Schema(
           "in process"
         ],
         default: "in process",
-
     }    
 
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("proposal", proposals);
+module.exports = mongoose.model("userWork", works);
