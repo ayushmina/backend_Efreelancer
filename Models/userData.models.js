@@ -27,7 +27,9 @@ const userDataSchema = new Schema(
     profilePic: {
       type: String,
     },
-
+    role:{
+      type:String
+    },
     loginType: {
       type: String,
       enum: ["google", "facebook", "phone"],
