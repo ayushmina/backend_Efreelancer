@@ -10,7 +10,7 @@ let Https= require("https");
 const validateRequestPayload = async (requestObj, res, schema) => {
   return new Promise((resolve, reject) => {
     const { error } = Joi.validate(requestObj, schema);
-    console.log(error,"hdbjhdbjhfjbdfvb")
+    
     if (error) {
       let message = sendBadRequestError(error, res);
       reject(Boom.badRequest(message));

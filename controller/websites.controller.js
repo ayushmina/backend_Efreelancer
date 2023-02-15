@@ -3,78 +3,82 @@ let Joi       =require("joi");
 let models    = require("../Models/index"); 
 
 
-
-
-exports.addCategory = async function (req, res) {
-    try {
+let curd={
+    addCategory : async function (req, res) {
+        try {
+            
+            const schema = Joi.object().keys({
+                Category: Joi.string().trim().required(),
+            })
         
-        const schema = Joi.object().keys({
-            Category: Joi.string().trim().required(),
-        })
     
-
-        await universalFunctions.validateRequestPayload(req.body, res, schema)
-
-      let category=await models.category.find(req.body);
-      if (category) {
-        return universalFunctions.sendError(
-          {
-            statusCode: 400,
-            message: "category already added in system add other category",
-          },
-          res
-        )
-      }
-
-      category=await models.category.create(req.body);
-
-
-
+            await universalFunctions.validateRequestPayload(req.body, res, schema)
     
-          return universalFunctions.sendSuccess(
-            {
-              statusCode: 200,
-              message: "category add Successfull",
-              data: category,
-            },
-            res
-          )
-        }
-       catch (error) {
-        return universalFunctions.sendError(error, res)
-      }
-}
-exports.getCategory = async function (req, res) {
-    try {
+          let category=await models.category.find(req.body);
+          if (category) {
+            return universalFunctions.sendError(
+              {
+                statusCode: 400,
+                message: "category already added in system add other category",
+              },
+              res
+            )
+          }
+    
+          category=await models.category.create(req.body);
+    
+    
+    
         
-        // const schema = Joi.object().keys({
-        //     Category: Joi.string().trim().required(),
-        // })
+              return universalFunctions.sendSuccess(
+                {
+                  statusCode: 200,
+                  message: "category add Successfull",
+                  data: category,
+                },
+                res
+              )
+            }
+           catch (error) {
+            return universalFunctions.sendError(error, res)
+          }
+    },
+    getCategory : async function (req, res) {
+        try {
+            
+            // const schema = Joi.object().keys({
+            //     Category: Joi.string().trim().required(),
+            // })
+        
     
-
-        // await universalFunctions.validateRequestPayload(req.body, res, schema)
-
-      let category=await models.category.find();
-      if (!category) {
-        return universalFunctions.sendError(
-          {
-            statusCode: 400,
-            message: "NO category added in system or  add  category",
-          },
-          res
-        )
-      }
-
-          return universalFunctions.sendSuccess(
-            {
-              statusCode: 200,
-              message: "category get Successfull",
-              data: category,
-            },
-            res
-          )
-        }
-       catch (error) {
-        return universalFunctions.sendError(error, res)
-      }
+            // await universalFunctions.validateRequestPayload(req.body, res, schema)
+    
+          let category=await models.category.find();
+          if (!category) {
+            return universalFunctions.sendError(
+              {
+                statusCode: 400,
+                message: "NO category added in system or  add  category",
+              },
+              res
+            )
+          }
+    
+              return universalFunctions.sendSuccess(
+                {
+                  statusCode: 200,
+                  message: "category get Successfull",
+                  data: category,
+                },
+                res
+              )
+            }
+           catch (error) {
+            return universalFunctions.sendError(error, res)
+          }
+    }
 }
+
+module.exports=curd;
+
+

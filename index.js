@@ -8,6 +8,8 @@ var cors=require("cors");
 const { send } = require('process');
 const dataBase=require("./databaseConnect");
 dataBase.mongoConnect();
+let websitesRouter=require("./routes/website.router");
+
 
 // Allow cors
 app.use(cors());
@@ -21,6 +23,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
+app.use("/websites", websitesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
