@@ -9,7 +9,7 @@ let Https= require("https");
 // var randomstring = require("randomstring");
 const validateRequestPayload = async (requestObj, res, schema) => {
   return new Promise((resolve, reject) => {
-    const { error } = Joi.validate(requestObj, schema);
+    const { error } = schema.validate(requestObj);
     
     if (error) {
       let message = sendBadRequestError(error, res);
