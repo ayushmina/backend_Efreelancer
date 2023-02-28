@@ -20,6 +20,9 @@ const jobPostSchema = new Schema(
     PaymentVerified:{
         type:Boolean,
         default:false,
+    },
+    location:{
+        type:String,
     }
     
 

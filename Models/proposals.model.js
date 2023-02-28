@@ -8,7 +8,7 @@ const proposals = new Schema(
         type: Schema.Types.ObjectId,
         ref: 'user',
     },
-    jobpost:{
+    jobpostId:{
         type: Schema.Types.ObjectId,
         ref: 'jobpost',
     },
@@ -25,7 +25,7 @@ const proposals = new Schema(
         type: String,
         enum: [
           "accpeted",
-          "in process"
+          "In_process"
         ],
         default: "in process",
 

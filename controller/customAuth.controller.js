@@ -1,5 +1,5 @@
 const universalFunctions                     = require("../../utils/unversalFunction")
-const models                                 = require("../../models")
+const models                                 = require("./../Models/index");
 const appConstants                           = require("../../utils/appConstants")
 const responseMessages                       = require("../../resources/resources.json");
 const config                                 = require("config");
@@ -12,10 +12,7 @@ const sendnotif                              = require("../../services/pushNotif
 
 exports.signinUser = async function (req, res) {
     try {
-      let lang="en";
-      if(req.body.lang){
-        lang=req.body.lang;
-      }
+    
       const schema = Joi.object().keys({
         email: Joi.string().trim().required(),
         password: Joi.string().trim().required(),
@@ -25,8 +22,8 @@ exports.signinUser = async function (req, res) {
   
       console.log("payload", req.body)
       await universalFunctions.validateRequestPayload(req.body, res, schema)
-      let payload = req.body
-  
+      let payload = req.body;
+
       let userInfo = await models.userSchema.findOne({
         email: payload.email
       })
@@ -62,7 +59,7 @@ exports.signinUser = async function (req, res) {
         return universalFunctions.sendSuccess(
           {
             statusCode: 200,
-            message: req.t("SIGNIN_SUCCESS",{lng:lang}),
+            message: "SIGNIN_SUCCESS",
             data: user,
           },
           res
@@ -74,10 +71,7 @@ exports.signinUser = async function (req, res) {
   }  
   exports.signup = async function (req, res) {
     try {
-      let lang="en";
-      if(req.body.lang){
-        lang=req.body.lang;
-      }
+   
       let payload = req.body
       console.log("payload", payload)
       let userExists = await models.userSchema.findOne({
@@ -128,7 +122,7 @@ exports.signinUser = async function (req, res) {
         return universalFunctions.sendSuccess(
           {
             statusCode: 200,
-            message: req.t("USER_CREATED_SUCCESSFULLY",{lng:lang}),
+            message: "USER_CREATED_SUCCESSFULLY",
             
             data: user,
           },
@@ -143,10 +137,7 @@ exports.signinUser = async function (req, res) {
     try {
       
         let payload={};
-        let lang="en";
-        if(req.body.lang){
-          lang=req.body.lang;
-        }
+  
         if(req.body.usingEmail){
             payload.email=req.body.email
         }else{
@@ -199,10 +190,7 @@ exports.signinUser = async function (req, res) {
   } 
   exports.validateOTP = async function (req, res) {
     try {
-      let lang="en";
-      if(req.body.lang){
-        lang=req.body.lang;
-      }
+    
       if (!req.body.otp) {
         throw Boom.badRequest(responseMessages.TOKEN_NOT_PROVIDED)
       }
@@ -232,7 +220,7 @@ exports.signinUser = async function (req, res) {
       return universalFunctions.sendSuccess(
         {
           statusCode: 200,
-          message: req.t("OTP_SUCCESS",{lng:lang}),
+          message:"OTP_SUCCESS",
           data: true,
         },
         res
@@ -271,7 +259,7 @@ exports.signinUser = async function (req, res) {
      
       let payload = req.body
     
-      let userExists = await models.userSchema.findOne(filter);
+      let userExists = await models.userSchema.find(filter);
       if (!userExists) {
         throw Boom.badRequest(responseMessages.USER_NOT_FOUND)
       }
