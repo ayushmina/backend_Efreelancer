@@ -189,29 +189,56 @@ let curd={
         }
   },
  
- postProposals: async function (req, res) {
+ postProposals : async function (req, res) {
   try {
       
     
         const schema = Joi.object().keys({
           
           clientId: Joi.string().trim().required(),
-          jobpost: Joi.string().trim().required(),
+          jobpostId: Joi.string().trim().required(),
           proposals: Joi.string().trim().required(),
           amount: Joi.string().trim().required(),
         })
          await universalFunctions.validateRequestPayload(req.body, res, schema);
-         await models.proposals.create(req.body);
+       let data = await models.proposals.create(req.body);
 
-         //  Notification
+       //  Notification
         return universalFunctions.sendSuccess(
           {
             statusCode: 200,
             message: "proposals add Successfull",
-            data: jobPost,
+            data: data,
           },
           res
         )
+      }
+     catch (error) {
+      return universalFunctions.sendError(error, res)
+    }
+},
+getProposals : async function (req, res) {
+  try {
+        
+        const schema = Joi.object().keys( {
+            clientId: Joi.string().trim(),
+            jobpostId: Joi.string().trim(),
+          })
+
+         await universalFunctions.validateRequestPayload(req.body, res, schema);
+
+         let data = await models.proposals.find(req.body);
+
+         // Notification
+         
+         return universalFunctions.sendSuccess(
+          {
+            statusCode: 200,
+            message: "Proposals Add Successfull",
+            data: data,
+          },
+           res
+          )
       }
      catch (error) {
       return universalFunctions.sendError(error, res)
