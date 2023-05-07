@@ -23,6 +23,11 @@ const jobPostSchema = new Schema(
     },
     location:{
         type:String,
+        default:"indai",
+    },
+    amount:{
+        type:String,
+        default:"indai",
     }
     
 

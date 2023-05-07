@@ -9,6 +9,7 @@ let curd={
     try {
         let playload=req.body;
         let id = req.params.id
+        id=req.body.id;
 
          if(!id){
           return universalFunctions.sendError(
@@ -43,45 +44,7 @@ let curd={
         return universalFunctions.sendError(error, res)
       }
 },
-    addCategory : async function (req, res) {
-        try {
-            
-            const schema = Joi.object().keys({
-                Category: Joi.string().trim().required(),
-            })
-        
-            console.log(req.body)
-            await universalFunctions.validateRequestPayload(req.body, res, schema)
-    
-          let category=await models.category.find(req.body);
-          if (category) {
-            return universalFunctions.sendError(
-              {
-                statusCode: 400,
-                message: "category already added in system add other category",
-              },
-              res
-            )
-          }
-    
-          category=await models.category.create(req.body);
-    
-    
-    
-        
-              return universalFunctions.sendSuccess(
-                {
-                  statusCode: 200,
-                  message: "category add Successfull",
-                  data: category,
-                },
-                res
-              )
-            }
-           catch (error) {
-            return universalFunctions.sendError(error, res)
-          }
-    },
+   
      addCategory : async function (req, res) {
         try {
             
@@ -93,7 +56,7 @@ let curd={
             await universalFunctions.validateRequestPayload(req.body, res, schema)
     
           let category=await models.category.find(req.body);
-          if (category) {
+          if (!category) {
             return universalFunctions.sendError(
               {
                 statusCode: 400,
@@ -127,8 +90,6 @@ let curd={
             // const schema = Joi.object().keys({
             //     Category: Joi.string().trim().required(),
             // })
-        
-    
             // await universalFunctions.validateRequestPayload(req.body, res, schema)
     
           let category=await models.category.find();
@@ -164,10 +125,9 @@ let curd={
               title: Joi.string().trim().required(),
               description: Joi.string().trim().required(),
               category: Joi.array().required(),
-              PaymentVerified: Joi.boolean()
-              
+              location: Joi.string().trim().required(),
+              amount: Joi.string().trim().required(),
             })
-        
             let clientId=req.user.id;
             let playload=req.body;
             await universalFunctions.validateRequestPayload(req.body, res, schema);
@@ -195,13 +155,17 @@ let curd={
     
         const schema = Joi.object().keys({
           
-          clientId: Joi.string().trim().required(),
           jobpostId: Joi.string().trim().required(),
           proposals: Joi.string().trim().required(),
           amount: Joi.string().trim().required(),
         })
+        
          await universalFunctions.validateRequestPayload(req.body, res, schema);
-       let data = await models.proposals.create(req.body);
+         let clientId=req.user.id;
+        let playload=req.body;
+        playload.clientId=clientId;
+        console.log(playload,"here is playload")
+       let data = await models.proposals.create(playload);
 
        //  Notification
         return universalFunctions.sendSuccess(

@@ -9,22 +9,24 @@ let curd={
     getuserProfile : async function (req, res) {
         try {
 
-          let category=await models.category.find();
-          if (!category) {
+         let id=req.paramse.id;
+
+         let data = await models.userSchema.create(req.body)
+          if (!data) {
             return universalFunctions.sendError(
               {
                 statusCode: 400,
-                message: "NO category added in system or  add  category",
+                message: "NO  category added in system or add category",
               },
               res
             )
           }
-    
+          
           return universalFunctions.sendSuccess(
              {
                   statusCode: 200,
                   message: "category get Successfull",
-                  data: category,
+                  data: data,
                 },
                 res
               )

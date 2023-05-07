@@ -18,17 +18,13 @@ const proposals = new Schema(
     amount:{
         type:String,
     },
-    rated:{
-        type:Number,
-    },
     action:{
         type: String,
         enum: [
           "accpeted",
-          "In_process"
+          "in process"
         ],
         default: "in process",
-
     }    
 
   },

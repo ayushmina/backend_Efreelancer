@@ -1,14 +1,12 @@
-const universalFunctions                     = require("../../utils/unversalFunction")
+const universalFunctions                     = require("../utils/universalFunctions")
 const models                                 = require("./../Models/index");
-const appConstants                           = require("../../utils/appConstants")
-const responseMessages                       = require("../../resources/resources.json");
+const responseMessages                       = require("../resources/response.json");
 const config                                 = require("config");
-const {jwtAppTokenGenerator}                 = require("../../utils/JwtFunctions");
+// const {jwtAppTokenGenerator}                 = require("../../utils/JwtFunctions");
 const Joi                                    = require("joi");
 const Boom                                   = require("boom");
-const {sendEmail}                            = require("../../services/MailServices/emailServicesSMTP");
-const {sessionManager}                       = require("../../services/authServices/sessionmanger");
-const sendnotif                              = require("../../services/pushNotification/firebaseAdmin");
+// const {sendEmail}                            = require("../../services/MailServices/emailServicesSMTP");
+const {createaccessToken}                    = require("../services/authServices/sessionmanger");
 
 exports.signinUser = async function (req, res) {
     try {
@@ -16,10 +14,7 @@ exports.signinUser = async function (req, res) {
       const schema = Joi.object().keys({
         email: Joi.string().trim().required(),
         password: Joi.string().trim().required(),
-        deviceType: Joi.string().trim().required(),
-        deviceToken: Joi.string().required(),
-      })
-  
+      })      
       console.log("payload", req.body)
       await universalFunctions.validateRequestPayload(req.body, res, schema)
       let payload = req.body;
@@ -38,17 +33,17 @@ exports.signinUser = async function (req, res) {
       } else {
 
         if (!userInfo.authenticate(req.body.password)) {
-          throw Boom.badRequest("Authentication failed. Passwords did not match.")
+          throw Boom.badRequest("Authentication failed Passwords did not match")
         }
-        let sesssionData = {
+        
+        let tokenn = {
           userId: userInfo._id,
-          deviceType: payload.deviceType,
         };
-        let token = await sessionManager(sesssionData);
-        //  console.log(token,"token:123")
-        // let token =  await jwtAppTokenGenerator(userInfo._id,payload.deviceType,payload.deviceToken);  
-      
-        let user = {
+        
+        let token = await createaccessToken(tokenn);
+
+
+     let user = {
           token:token,
           _id: userInfo._id,
           name: userInfo.name,
@@ -87,15 +82,13 @@ exports.signinUser = async function (req, res) {
         )
       } else {
         const schema = Joi.object().keys({
-          name: Joi.string().trim().required(),
+          fisrtFame: Joi.string().trim().required(),
           lastName:Joi.string().trim().optional(),
           email: Joi.string().email().optional(),
           phoneNumber:Joi.string().optional(),
-          profilePic:Joi.string().optional(),
           countryCode:Joi.string().optional(),
           password: Joi.string().required(),
-          deviceType: Joi.string().trim().required(),
-          deviceToken: Joi.string().required(),
+       
           
         })
         await universalFunctions.validateRequestPayload(req.body, res, schema)
@@ -103,11 +96,11 @@ exports.signinUser = async function (req, res) {
         let payload=req.body;
 
         let userInfo = await models.userSchema.create(payload);
-        let sesssionData = {
+        let tokenn = {
           userId: userInfo._id,
           deviceType: payload.deviceType,
         };
-        let token = await sessionManager(sesssionData);
+        let token = await createaccessToken(tokenn);
         // console.log(token,"token:123")
         //  token =await  jwtAppTokenGenerator(userInfo._id,payload.deviceType,payload.deviceToken);  
 
@@ -170,13 +163,13 @@ exports.signinUser = async function (req, res) {
     //   call notification service to send email  
     let emailType="FORGOT_PASSWORD";
     let dataAddEmail= {
-      token:OTP
+        token:OTP
     }
-    // sendEmail = (emailType, emailVariables, emailId)
-    // emailVariables it shoud be object 
-       await  sendEmail(emailType,dataAddEmail,req.body.email);
-//       forgot passowrd using phone 
-//       sendOTP(req.body.phoneNumber)
+    //  sendEmail = (emailType, emailVariables, emailId)
+    //  emailVariables it shoud be object 
+    //  await  sendEmail(emailType,dataAddEmail,req.body.email);
+    //  forgot passowrd using phone 
+    //  sendOTP(req.body.phoneNumber)
       return universalFunctions.sendSuccess(
         {
           statusCode: 200,

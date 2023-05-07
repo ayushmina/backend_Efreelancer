@@ -1,10 +1,9 @@
 const Jwt               = require("jsonwebtoken");
 const Config            =require("config");
-const responseMessage   =require("../../resources/resources.json");
+const responseMessage   =require("../../resources/response.json");
 const Boom              =require("boom");
-const unversalFunction  =require("../../utils/unversalFunction");
-const appConstants      =require("../../utils/appConstants");
-const models            =require("../../models");
+const unversalFunction  =require("../../utils/universalFunctions");
+const models            =require("../../Models/");
 
 
 
@@ -49,7 +48,7 @@ const destroySession = async (token) => {
 const createToken = async (payloadData, time) => {
   
   return new Promise((resolve, reject) => {
-    Jwt.sign(payloadData, Config.get("jwt.secret"), (err, jwt) => {
+    Jwt.sign(payloadData,"secretKey", (err, jwt) => {
       if (err) {
         reject(err);
       } else {
@@ -61,35 +60,23 @@ const createToken = async (payloadData, time) => {
 
 const sessionManager = async (sessionData) => {
   try {
-    const defaults = Config.get("sessionManager");
-    if (defaults) {
-      let tokenExpireTime = defaults.userTokenExpireTime;
-      if (sessionData.deviceType == appConstants.deviceType_website) {
         return webSessionManager(
           defaults.webMultiSession,
           tokenExpireTime,
           sessionData
         );
-      } else {
-        return deviceSessionManager(
-          defaults.deviceMultiSession,
-          tokenExpireTime,
-          sessionData
-        );
-      }
-    } else {
-      throw Boom.badRequest(responseMessage.DEFAULT);
-    }
+     
+     
   } catch (error) {
     throw error;
   }
+  
 };
 
 const webSessionManager = async (webMultiSession, expireTime, sessionData) => {
   try {
     const tokenData = {
       userId: sessionData.userId,
-      deviceType: sessionData.deviceType,
     };
 
     return createaccessToken(tokenData, expireTime);
@@ -101,22 +88,17 @@ const webSessionManager = async (webMultiSession, expireTime, sessionData) => {
 const deviceSessionManager = async (
   deviceMultiSession,
   expireTime,
-  sessionData
-) => {
+  sessionData  ) => {
   try {
     const dataToSave = {
       userId: sessionData.userId,
-      deviceType: sessionData.deviceType,
     };
 
     let model = models.userSessionSchema;
 
     if (!deviceMultiSession) {
       await model.remove({
-        userId: sessionData.userId,
-        deviceType: {
-          $or: [appConstants.deviceType_android, appConstants.deviceType_apple],
-        },
+        userId: sessionData.userId
       });
     }
 
@@ -134,9 +116,11 @@ const deviceSessionManager = async (
   }
 };
 
-const createaccessToken = async (tokenData, expireTime) => {
+const createaccessToken = async (tokenData, expireTime=1440) => {
   try {
+
     const accessToken = await createToken(tokenData, expireTime);
+    
     if (accessToken) {
       return accessToken;
     } else {
@@ -153,5 +137,6 @@ const createaccessToken = async (tokenData, expireTime) => {
 module.exports = {
   sessionManager,
   destroySession,
+  createaccessToken
   
 };

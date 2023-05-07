@@ -1,15 +1,20 @@
 
-import Jwt, { decode } from "jsonwebtoken";
-import Boom from "boom";
+const Jwt               = require("jsonwebtoken");
+const Boom =require("boom");
 let universalFunctions= require("../../utils/universalFunctions");
 let  models=require("../../Models/index");
 const checkAuth =  async(req, res, next) => {
-    const token = req.headers["x-access-token"] || req.query["x-access-token"] || req.headers["token"];
-    console.log("token:",token);
+    // const token = req.headers["x-access-token"] || req.query["x-access-token"] || req.headers["token"];
+    // console.log("token:",token);
+    let token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDU1ZTY1YmMyOTdkOWI0ODZlMTc2MzgiLCJpYXQiOjE2ODMzNTExMzF9.TRIvPbcYxkVnefh1PIlI1Bo-aGuwhDmmYaNjFOPC7YM"
+
       if (token) {
         // let decoded = jwt_decode(token);
-        Jwt.verify(token, Config.get("jwt.secret"), async function (err, decoded) {
+        Jwt.verify(token,"secretKey", async function (err, decoded) {
           try {
+
+
+
             console.log("decoded inside",decoded);
   
               let model = models.userSchema;
@@ -22,20 +27,14 @@ const checkAuth =  async(req, res, next) => {
               user = user.toJSON();
               // console.log("decoded" , user);
   
-              if (user.isDeleted) {
-                throw Boom.badRequest("USER_NOT_FOUND");
-              }
-              if (user.userSuspend) {
-                throw Boom.badRequest("userSuspend");
-              } 
+
               
          
                 let userInfo = {
                   id: user._id,
-                  name: user.name,
-                  email: user.email ? user.email : "",
-                  isPhoneVerified:user.isPhoneVerified,
-                  // phoneNumber: user.phoneNumber ? user.phoneNumber : "",
+                  name: user.firstName,
+                  email: user.email ? user.email :"",
+                  phoneNumber: user.phoneNumber ? user.phoneNumber : "",
                 };
                 req.user = userInfo;
                 next();
@@ -53,3 +52,7 @@ const checkAuth =  async(req, res, next) => {
         );
       }
   };
+
+module.exports=checkAuth;
+
+

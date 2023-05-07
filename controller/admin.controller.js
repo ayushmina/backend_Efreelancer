@@ -49,8 +49,6 @@ let curd={
             // const schema = Joi.object().keys({
             //     Category: Joi.string().trim().required(),
             // })
-        
-    
             // await universalFunctions.validateRequestPayload(req.body, res, schema)
     
           let category=await models.category.find();
