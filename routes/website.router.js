@@ -15,6 +15,7 @@ router.route("/getProposals").get(checkAuth,website.getProposals);
 router.route("/updateProfile").post(checkAuth,website.updateProfile);
 router.route("/postProposals").post(checkAuth,website.postProposals);
 router.route("/postjob").post(checkAuth,website.addJobPost);
+router.route("/getJobPost").get(website.getJobPost);
 
 
 

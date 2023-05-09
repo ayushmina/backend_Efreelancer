@@ -35,7 +35,6 @@ let curd={
             {
               statusCode: 200,
               message: "post   Successfull",
-              data: jobPost,
             },
             res
           )
@@ -115,7 +114,44 @@ let curd={
            catch (error) {
             return universalFunctions.sendError(error, res)
           }
-    },
+    }, 
+    getJobPost : async function (req, res) {
+      try {
+
+        let jobPost=await models.jobpost.find().populate([
+          {
+            path: "clientId",
+            model: "user",
+            select: ["_id", "firstName", "lastName", "profilePic"],
+
+          },{
+            path: "category",
+            model: "category",
+          },
+        ]);
+        if (!jobPost) {
+          return universalFunctions.sendError(
+            {
+              statusCode: 400,
+              message: "NO jobPost added in system or plaese  add  jobPost",
+            },
+            res
+          )
+        }
+  
+            return universalFunctions.sendSuccess(
+              {
+                statusCode: 200,
+                message: "jobPost get Successfull",
+                data: jobPost,
+              },
+              res
+            )
+          }
+         catch (error) {
+          return universalFunctions.sendError(error, res)
+        }
+  },
     addJobPost : async function (req, res) {
       try {
           
