@@ -4,10 +4,17 @@ const Schema = mongoose.Schema;
 
 const proposals = new Schema(
   {
+    address:{
+      type:String,
+    },
     clientId :{
         type: Schema.Types.ObjectId,
         ref: 'user',
     },
+    freelancerId :{
+      type: Schema.Types.ObjectId,
+      ref: 'user',
+  },
     jobpostId:{
         type: Schema.Types.ObjectId,
         ref: 'jobpost',
@@ -18,6 +25,9 @@ const proposals = new Schema(
     amount:{
         type:String,
     },
+    deliveryTime:{
+      type:String,
+  },
     action:{
         type: String,
         enum: [

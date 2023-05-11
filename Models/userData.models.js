@@ -63,6 +63,9 @@ const userDataSchema = new Schema(
         Degree: {
           type: String,
         },
+        department: {
+          type: String,
+        },
         start: {
           type: String,
         },
@@ -92,7 +95,21 @@ const userDataSchema = new Schema(
       introduction:{
         type:String
       }
+      // type: Schema.Types.Mixed,
     },
+    certification: [
+      {
+      title:{
+        type:String
+      },
+      certifiedFrom:{
+        type:String
+      },
+      About:{
+        type:String
+      }
+    }
+    ],
     resetPasswordOtp: {
       type: Number,
     },

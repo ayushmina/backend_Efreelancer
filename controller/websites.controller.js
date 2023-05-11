@@ -5,12 +5,10 @@ const { ObjectId } = require('mongodb');
 
 
 let curd={
-  updateProfile : async function (req, res) {
+  getUserInfo : async function (req, res) {
     try {
-        let playload=req.body;
-        let id = req.params.id
-        id=req.body.id;
-
+        
+        let id = req.user.id;
          if(!id){
           return universalFunctions.sendError(
             {
@@ -20,15 +18,48 @@ let curd={
             res
           )         } 
 
-         let user= await  models.userSchema.findOneAndDelete(
+         let user= await  models.userSchema.findOne({_id:id});
+         user = JSON.parse(JSON.stringify(user))
+         delete user.password
+         delete user.salt
+         delete user.resetPasswordOtp
+         delete user.resetPasswordExpires
+
+          return universalFunctions.sendSuccess(
+            {
+              statusCode: 200,
+              message: "post   Successfull",
+              data:user,
+            },
+            res
+          )
+        }
+       catch (error) {
+        return universalFunctions.sendError(error, res)
+      }
+},
+  updateProfile : async function (req, res) {
+    try {
+        let playload=req.body;
+        let id = req.user.id;
+         if(!id){
+          return universalFunctions.sendError(
+            {
+              statusCode: 400,
+              message: "id not found",
+            },
+            res
+          )         } 
+          console.log(id,playload)
+          let data=playload.data
           
-          {
+         let user= await  models.userSchema.findOneAndUpdate(
+           {
             _id:id
           },
-             playload,
-          {
-          new: true,
-        });
+             {$set:data},
+             { new: true }
+         );
 
 
           return universalFunctions.sendSuccess(
@@ -117,8 +148,14 @@ let curd={
     }, 
     getJobPost : async function (req, res) {
       try {
-
-        let jobPost=await models.jobpost.find().populate([
+        let searchText = req.query._id
+        console.log(req.query,"here is ")
+        let playload={};
+        if(searchText){
+          playload._id=searchText;
+        }
+        console.log(playload,"here is ")
+        let jobPost=await models.jobpost.find(playload).populate([
           {
             path: "clientId",
             model: "user",
@@ -194,12 +231,15 @@ let curd={
           jobpostId: Joi.string().trim().required(),
           proposals: Joi.string().trim().required(),
           amount: Joi.string().trim().required(),
+          deliveryTime: Joi.string().trim().required(),
+          address: Joi.string().trim().required(),
+          clientId:Joi.string().trim().required(),
         })
         
          await universalFunctions.validateRequestPayload(req.body, res, schema);
-         let clientId=req.user.id;
+         let freelancerId=req.user.id;
         let playload=req.body;
-        playload.clientId=clientId;
+        playload.freelancerId=freelancerId;
         console.log(playload,"here is playload")
        let data = await models.proposals.create(playload);
 
@@ -220,21 +260,22 @@ let curd={
 getProposals : async function (req, res) {
   try {
         
-        const schema = Joi.object().keys( {
-            clientId: Joi.string().trim(),
-            jobpostId: Joi.string().trim(),
-          })
+        // const schema = Joi.object().keys( {
+        //     clientId: Joi.string().trim(),
+        //     jobpostId: Joi.string().trim(),
+        //   })
 
-         await universalFunctions.validateRequestPayload(req.body, res, schema);
-
-         let data = await models.proposals.find(req.body);
+        //  await universalFunctions.validateRequestPayload(req.body, res, schema);
+        let payload=req.body;
+        console.log(payload,"inside getproposals");
+         let data = await models.proposals.find(payload);
 
          // Notification
          
          return universalFunctions.sendSuccess(
           {
             statusCode: 200,
-            message: "Proposals Add Successfull",
+            message: "Proposals get Successfull",
             data: data,
           },
            res

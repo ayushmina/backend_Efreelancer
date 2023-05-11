@@ -6,7 +6,7 @@ let  models=require("../../Models/index");
 const checkAuth =  async(req, res, next) => {
     // const token = req.headers["x-access-token"] || req.query["x-access-token"] || req.headers["token"];
     // console.log("token:",token);
-    let token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDU1ZTY1YmMyOTdkOWI0ODZlMTc2MzgiLCJpYXQiOjE2ODMzNTExMzF9.TRIvPbcYxkVnefh1PIlI1Bo-aGuwhDmmYaNjFOPC7YM"
+    let token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDViNmZiNDJhZDYyNTZkOWFlZTM0ZTYiLCJpYXQiOjE2ODM3MTM5NzJ9.2ogtd8Et1tgL4l1jwnumJyNxRizYmcqeMzddOIy6SOk"
 
       if (token) {
         // let decoded = jwt_decode(token);

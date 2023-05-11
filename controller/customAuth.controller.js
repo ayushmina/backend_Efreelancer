@@ -91,7 +91,7 @@ exports.signinUser = async function (req, res) {
        
           
         })
-        await universalFunctions.validateRequestPayload(req.body, res, schema)
+        // await universalFunctions.validateRequestPayload(req.body, res, schema)
 
         let payload=req.body;
 
