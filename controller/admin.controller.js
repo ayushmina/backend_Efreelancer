@@ -11,7 +11,9 @@ let curd={
                 Category: Joi.string().trim().required(),
             })
         
-    
+      // jhbfvjhjdvjhdvdf vd vdvdjf vd vfd
+      // dfvdfvdf vdf  dfv dfv 
+      // fd dnfdkfj jdf 
             await universalFunctions.validateRequestPayload(req.body, res, schema)
     
           let category=await models.category.find(req.body);
