@@ -1,11 +1,12 @@
 {
   "name": "e_freelancer",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "description": "",
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "semantic-release": "semantic-release"
   },
   "author": "ayush",
   "license": "ISC",
@@ -25,5 +26,9 @@
   },
   "devDependencies": {
     "semantic-release": "^21.0.7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ayushmina/backend_Efreelancer.git"
   }
 }
