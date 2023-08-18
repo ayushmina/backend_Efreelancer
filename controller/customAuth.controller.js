@@ -1,11 +1,8 @@
 const universalFunctions                     = require("../utils/universalFunctions")
 const models                                 = require("./../Models/index");
 const responseMessages                       = require("../resources/response.json");
-const config                                 = require("config");
-// const {jwtAppTokenGenerator}                 = require("../../utils/JwtFunctions");
 const Joi                                    = require("joi");
 const Boom                                   = require("boom");
-// const {sendEmail}                            = require("../../services/MailServices/emailServicesSMTP");
 const {createaccessToken}                    = require("../services/authServices/sessionmanger");
 
 exports.signinUser = async function (req, res) {
