@@ -1,0 +1,36 @@
+name: Auto Version
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Install Node.js and npm
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Increment version and create tag
+        run: npm version patch -m "Version bump: ${{ github.event.head_commit.message }}"
+
+      - name: Update README
+        run: |
+          version=$(node -p "require('./package.json').version")
+          description=$(git log -1 --pretty=%B)
+          sed -i "s/{{ version }}/$version/g" README.md
+          sed -i "s/{{ description }}/$description/g" README.md
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add README.md package.json
+          git commit -m "Update README with latest version"
+          git push
